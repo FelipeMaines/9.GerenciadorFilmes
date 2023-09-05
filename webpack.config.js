@@ -7,7 +7,8 @@ module.exports = {
 
   // O ponto de entrada da aplicação
   entry: {
-    index: path.resolve(__dirname, 'src/views', 'index.ts')
+    index: path.resolve(__dirname, 'src/views', 'TelaPrincipal', 'index.ts'),
+    detalhes: path.resolve(__dirname, 'src/views', 'TelaDetalhes','detalhes.ts')
   },
 
   // Configuração de output do build
@@ -43,8 +44,14 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      template: path.resolve(__dirname, 'src/views', 'index.html'),
+      template: path.resolve(__dirname, 'src/views', 'TelaPrincipal','index.html'),
       chunks: ['index']
+    }),
+
+    new HtmlWebpackPlugin({
+      filename: 'detalhes.html',
+      template: path.resolve(__dirname, 'src/views', 'TelaDetalhes','detalhes.html'),
+      chunks: ['detalhes']
     }),
 
     new CopyWebpackPlugin({
