@@ -9,22 +9,16 @@ export class ServiceFilme {
         .then((res) => res.json())
         .then((obj) => 
         {
-            console.log('Image')
-            console.log(obj)
             return this.MapearFilme(obj);
         })}
 
-    BuscarFilmesEmAlta(): Promise<Filme[]> {
+    async BuscarFilmesEmAlta(): Promise<Filme[]> {
         return fetch("https://api.themoviedb.org/3/discover/movie", ObterHeaderAutorizacao())
           .then((res: Response): Promise<any> => {
-            console.log("RES:");
-            console.log(res);
             return res.json();
           })
           .then((obj: any) => {
-            console.log("OBJ");
-            console.log(obj);
-            return this.MapearListaFilmes(obj.results);
+            return this.MapearListaFilmes(obj.results, true);
           })
            .catch((error: Error) => {
              console.error("Erro ao buscar filmes em alta:", error);
@@ -32,8 +26,14 @@ export class ServiceFilme {
            });
       }
 
-    MapearListaFilmes(results: any[]): any {
+    async MapearListaFilmes(results: any[], pegarImagem: boolean = false): Promise<Filme[]> {
         const filmes = results.map(obj => this.MapearFilme(obj));
+
+        if(pegarImagem){
+            for(let item of filmes){
+                await this.BuscarImagemFilme(item.id).then(res => item.foto = res);
+            }
+        }
         
         return Promise.all(filmes);
     }
@@ -43,8 +43,6 @@ export class ServiceFilme {
         .then((res) => res.json())
         .then((obj) => 
         {
-            console.log('Image')
-            console.log(obj)
             return this.MapearEmImagem(obj);
         })
     }
@@ -52,10 +50,6 @@ export class ServiceFilme {
    MapearEmImagem(obj: any): string{
 
     const primeiraImagem = obj.posters[0];
-    console.log("OBJ POSTERS[0]:")
-    console.log(obj.posters[0]);
-
-    console.log("FILE PATH:")
     return 'https://image.tmdb.org/t/p/' + 'w500' + primeiraImagem.file_path;
 }
 
@@ -69,14 +63,4 @@ export class ServiceFilme {
             data: obj.release_date
         }
     }
-
-    // private ObterHeaderAutorizacao(): object{
-    //     return {
-    //         method: 'GET',
-    //         headers: {
-    //             accept: "application/json",
-    //             Authorization: `Bearer ${API_KEY}`
-    //         }
-    //     }
-    // }
 }
