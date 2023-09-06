@@ -14,6 +14,7 @@ class TelaPrincipla {
     row: HTMLDivElement;
     filmesEmAlta: Array<Filme>;
     promise : Promise<Filme[]>;
+    eventA : NodeListOf<HTMLLinkElement>;
 
     constructor(){
         this.detalhes = new detalhes();
@@ -21,33 +22,48 @@ class TelaPrincipla {
         this.containerEmAlta = document.querySelector('#containerEmAlta') as HTMLDivElement;
         this.row = document.querySelector('#containerEmAlta .row ') as HTMLDivElement;
         this.servicoFilme.BuscarFilmesEmAlta().then(res => this.CriarGrid(res));
+        this.eventA = document.querySelectorAll('#a');
         //.then(filmes => this.CriarGrid(filmes))
+
+        this.AdicionarEventos()
     }
 
-    CriarGrid(listaFilmes: Filme[]) : void{
+    AdicionarEventos() {
+        for(let i = 0; i <this.eventA.length; i++){
+            this.eventA[i].addEventListener('click', ()=>{
+
+            })
+        }
+    }
+
+    async CriarGrid(listaFilmes: Filme[]) {
         console.log(listaFilmes);
+    
+        const baseUrl = 'https://image.tmdb.org/t/p/';
 
-       for(let i = 0; i < 5; i++)
-       {
-           let filme: Filme;
-           filme = listaFilmes[i];
+        for (let i = 0; i < 20; i++) {
+            let filme = listaFilmes[i];
+    
+            // Busca o path da imagem de forma assíncrona
+            const imagemPath = await this.servicoFilme.BuscarImagemFilme(filme.id);
 
-           console.log("filme:" + filme);
-
+            const imagemUrl = baseUrl + 'w500' + imagemPath; // 'w500' é o tamanho da imagem, você pode escolher outro tamanho se desejar
+    
             const novoElemento = document.createElement("div");
-            novoElemento.className = "col-6 col-md-4 col-lg-2"; 
-
+            novoElemento.className = "col-6 col-md-4 col-lg-2";
+    
             const conteudo = `
                 <div class="d-grid gap-2 text-center text-center">
                     <img
-                    src=${"https://image.tmdb.org/t/p/original/9EnfMH0nTPCna87Mh3G8Q6W2wze.jpg"} 
-                    class="img-fluid rounded-3 p-2 pb-0">
-                    <a href="detalhes.html" class="fs-5 link-warning fw-bold text-decoration-none">${filme.nome}</a>
-                </div>`
-
+                        src="${imagemUrl}"  // Insira o caminho da imagem aqui
+                        class="img-fluid rounded-3 p-2 pb-0"
+                    >
+                    <a href="detalhes.html" class="fs-5 link-warning fw-bold text-decoration-none" id="a">${filme.nome}</a>
+                </div>`;
+    
             novoElemento.innerHTML = conteudo;
-
-            console.log("Row:" + this.row);
+            
+            console.log(imagemUrl);
             this.row.appendChild(novoElemento);
         }
     }
