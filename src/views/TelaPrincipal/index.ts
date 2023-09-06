@@ -26,7 +26,7 @@ class TelaPrincipla {
 
     async CriarGrid(listaFilmes: Filme[]) {
 
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < 12; i++) {
             let filme = listaFilmes[i];
     
             // const imagemPath = await this.servicoFilme.BuscarImagemFilme(filme.id);
