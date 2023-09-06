@@ -36,11 +36,12 @@ class TelaPrincipla {
     
             const conteudo = `
                 <div class="d-grid gap-2 text-center text-center">
-                    <img
-                        src="${filme.foto}"  // Insira o caminho da imagem aqui
-                        class="img-fluid rounded-3 p-2 pb-0"
-                    >
-                    <a href="detalhes.html?id=${filme.id}" class="fs-5 link-warning fw-bold text-decoration-none" id="a">${filme.nome}</a>
+                    <a href="detalhes.html?id=${filme.id}" class="fs-5 link-warning fw-bold text-decoration-none" id="a">
+                        <img
+                          src="${filme.foto}"  // Insira o caminho da imagem aqui
+                          class="img-fluid rounded-3 p-2 pb-0"
+                        >
+                        ${filme.nome}</a>
                 </div>`;
     
             novoElemento.innerHTML = conteudo;
